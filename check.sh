@@ -1,3 +1,5 @@
+#!/bin/bash
+
 init-test() {
   task=${1}
   echo "Copying tests into .tasks/${task}/src/test/java/"
@@ -34,9 +36,17 @@ check-task() {
   if [ ! -d ${task} ]; then 
     echo "No tests for ${task} found. Skipping."
     exit 0
-  else
-    echo "Running tests for task ${task}"
   fi
+
+  if grep ${task} .checkignore; then
+    echo "Task ${task} is set to be ignored. Skipping."
+    echo ""
+    return 0
+  fi
+
+  echo "Running tests for task ${task}"
+
+
   
   init-test ${task}
   execute-test ${task}
@@ -47,17 +57,34 @@ check-task() {
     echo "Test build for task ${task} succeeded."
   fi
   cleanup-test ${task}
+  echo ""
 
   return ${exec_exit_code}
 }
 
-exit_code=0;
-for task in $(ls .tasks/satori) 
-do
-  check-task satori/${task}
-  if [ $? -ne 0 ]; then
-    exit_code=1
-  fi
-done
+check-all()  {
+  exit_code=0;
+  for task in $(ls .tasks/satori) 
+  do
+    check-task satori/${task}
+    if [ $? -ne 0 ]; then
+      exit_code=1
+    fi
+  done
 
-exit ${exit_code}
+  if [ ${exit_code} -ne 0 ]; then
+    echo "Project build failed."
+  else
+    echo "Project build succeeded";
+  fi
+
+  exit ${exit_code}
+}
+
+
+if [ -n "${1}" ]; then
+  check-task satori/${1}
+else
+  check-all
+fi
+

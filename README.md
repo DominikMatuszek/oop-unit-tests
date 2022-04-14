@@ -1,6 +1,8 @@
 # oop-unit-tests
 Repository for sharing unit tests for OOP course
 
+There is `clone.sh` bash script available which clones skeleton and tests for a task. Usage: `./clone.sh {task} {dest}` - creates `{task}` directory in `{dest}`
+
 # How to contribute with tests
 
 ## Git
@@ -17,7 +19,7 @@ Repository for sharing unit tests for OOP course
         2. Execute `git pull upstream main` to sync changes
     - If you commited your changes rebase instead of merging:
         1. `git fetch`
-        2. `git rebase origin main`
+        2. `git rebase origin/main`
         
 3. Create branch for your changes and switch to it
     1. `git branch {branch_name}`
@@ -27,6 +29,7 @@ Repository for sharing unit tests for OOP course
     Don't create new directories there.
 
 5. Make sure your tests compile by executing `bash check.sh`
+    - note: you can build a single task by providing the task name as an argument, e.g. `bash check.sh A`
 6. Commit your changes and push them
 7. Go to your repository on Github and create a pull request
 
